@@ -433,10 +433,10 @@ def add():
 
 
   for rid in r_id_list:
-    q_string = "INSERT INTO recieve_agency VALUES (%i, %i, '%s', '%s', %i, '%s')"\
+    q_string = "INSERT INTO receive_agency VALUES (%i, %i, '%s', '%s', %i, '%s')"\
     % (p_id, rid, i_type, f_type, amount, currency)
     g.conn.execute(text(q_string))
-    q_string = "SELECT * FROM recieve_agency WHERE project_id=%i AND r_agency_id=%i" % (p_id, rid)
+    q_string = "SELECT * FROM receive_agency WHERE project_id=%i AND r_agency_id=%i" % (p_id, rid)
     cursor = g.conn.execute(text(q_string))
     try: 
       if not int(cursor.fetchone()[1]) == rid:
