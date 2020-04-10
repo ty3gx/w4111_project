@@ -9,6 +9,7 @@ A debugger such as "pdb" may be helpful for debugging.
 Read about it online.
 """
 import os
+import sys
   # accessible as a variable in index.html:
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
@@ -157,17 +158,298 @@ def index():
 # Notice that the function name is another() rather than index()
 # The functions for each app.route need to have different names
 #
-@app.route('/another')
-def another():
-  return render_template("another.html")
+
+@app.route('/add_project')
+def add_project():
+  return render_template('add_project.html')
+
+@app.route('/add_agency')
+def add_agency():
+  return render_template('add_agency.html')
+
+@app.route('/add_agency_action', methods=['POST'])
+def add_agency_action():
+  a_type_full = None
+  a_type = request.form['type']
+  name = request.form['name']
+  s_type = request.form['s_type']
+  o_type = request.form['other_type']
+  #print(a_type, name, s_type, o_type, file=sys.stderr)
+  if a_type == 'r':
+    a_type_full = 'recipient'
+  elif a_type == 'f':
+    a_type_full = 'funding'
+  elif a_type == 'i':
+    a_type_full = 'implementing'
+
+  if s_type == 'Other' and o_type != "":
+    s_type = o_type
+
+  q_string = "SELECT max(%s_agency_id) FROM %s_agency" % (a_type, a_type_full)
+  cursor = g.conn.execute(text(q_string))
+  a_id = cursor.fetchone()[0]
+  cursor.close()
+
+  a_id = int(a_id) + 1
+  q_string = "INSERT INTO %s_agency VALUES (%i, '%s', '%s')" % (a_type_full, a_id, name, s_type)
+  g.conn.execute(text(q_string))
+
+  # check for success
+  q_string = "SELECT * FROM %s_agency WHERE %s_agency_id=%i" % (a_type_full, a_type, a_id)
+  cursor = g.conn.execute(text(q_string))
+  try: 
+    if not cursor.fetchone()[1] == name:
+      return render_template('/add_agency_error.html', data = str(a_id))
+  except:
+    return render_template('/add_agency_error.html', data = str(a_id))
+
+  return render_template('/add_agency_success.html', data = str(a_id))
+
+
+
+
+@app.route('/add_person')
+def add_person():
+  return render_template('add_person.html')
+
+@app.route('/add_person_action', methods=['POST'])
+def add_person_action():
+  name = request.form['name']
+
+  q_string = "SELECT max(person_id) FROM contact_person"
+  cursor = g.conn.execute(text(q_string))
+  a_id = cursor.fetchone()[0]
+  cursor.close()
+
+  a_id = int(a_id) + 1
+  q_string = "INSERT INTO contact_person VALUES (%i, '%s')" % (a_id, name)
+  #print(q_string, file=sys.stderr)
+  g.conn.execute(text(q_string))
+
+  # check for success
+  q_string = "SELECT * FROM contact_person WHERE person_id=%i" % (a_id)
+  cursor = g.conn.execute(text(q_string))
+  try: 
+    if not cursor.fetchone()[1] == name:
+      return render_template('/add_person_error.html', data = str(a_id))
+  except:
+    return render_template('/add_person_error.html', data = str(a_id))
+
+  return render_template('/add_person_success.html', data = str(a_id))
+
+
+
+
+
+
+
+@app.route('/add_r_area')
+def add_r_area():
+  return render_template('add_r_area.html')
+
+@app.route('/add_r_area_action', methods=['POST'])
+def add_r_area_action():
+  name = request.form['name']
+  region = request.form['region']
+  other = request.form['other']
+
+  if region == 'Other' and other != "":
+    region = other
+
+  q_string = "SELECT max(area_id) FROM recipient_area"
+  cursor = g.conn.execute(text(q_string))
+  a_id = cursor.fetchone()[0]
+  cursor.close()
+
+  a_id = int(a_id) + 1
+  q_string = "INSERT INTO recipient_area VALUES (%i, '%s', '%s')" % (a_id, name, region)
+  g.conn.execute(text(q_string))
+
+  # check for success
+  q_string = "SELECT * FROM recipient_area WHERE area_id=%i" % (a_id)
+  cursor = g.conn.execute(text(q_string))
+  try: 
+    if not cursor.fetchone()[1] == name:
+      return render_template('/add_r_area_error.html', data = str(a_id))
+  except:
+    return render_template('/add_r_area_error.html', data = str(a_id))
+
+  return render_template('/add_r_area_success.html', data = str(a_id))
+
+
+
+
+
+@app.route('/search_id')
+def search_id():
+  return render_template('search_id.html')
+
+@app.route('/search_id_action', methods=['POST'])
+def search_id_action():
+  agency = request.form['agency']
+  person = request.form['person']
+  area = request.form['area']
+  region = request.form['region']
+
+  i_agency_result = []
+  f_agency_result = []
+  r_agency_result = []
+  person_result = []
+  area_result = []
+
+  if agency != "":
+    q_string = "SELECT * FROM implementing_agency WHERE UPPER(i_agency_name) LIKE UPPER('%%%s%%')" %(agency)
+    cursor = g.conn.execute(text(q_string))
+    i_agency_result = list(cursor.fetchall())
+    cursor.close()
+
+    q_string = "SELECT * FROM funding_agency WHERE UPPER(f_agency_name) LIKE UPPER('%%%s%%')" %(agency)
+    cursor = g.conn.execute(text(q_string))
+    f_agency_result = list(cursor.fetchall())
+    cursor.close()
+
+    q_string = "SELECT * FROM recipient_agency WHERE UPPER(r_agency_name) LIKE UPPER('%%%s%%')" %(agency)
+    cursor = g.conn.execute(text(q_string))
+    r_agency_result = list(cursor.fetchall())
+    cursor.close()
+
+
+  if person != "":
+    q_string = "SELECT * FROM contact_person WHERE UPPER(person_name) LIKE UPPER('%%%s%%')" %(person)
+    cursor = g.conn.execute(text(q_string))
+    person_result = list(cursor.fetchall())
+    cursor.close()
+
+  if area != "" and region == "":
+    q_string = "SELECT * FROM recipient_area WHERE UPPER(area_name) LIKE UPPER('%%%s%%')" %(area)
+    cursor = g.conn.execute(text(q_string))
+    area_result = list(cursor.fetchall())
+    cursor.close()
+
+  if area == "" and region != "":
+    q_string = "SELECT * FROM recipient_area WHERE UPPER(region) LIKE UPPER('%%%s%%')" %(region)
+    cursor = g.conn.execute(text(q_string))
+    area_result = list(cursor.fetchall())
+    cursor.close()
+
+  if area != "" and region != "":
+    q_string = "SELECT * FROM recipient_area WHERE UPPER(region) LIKE UPPER('%%%s%%') AND UPPER(area_name) LIKE UPPER('%%%s%%')"\
+     %(region, area)
+    cursor = g.conn.execute(text(q_string))
+    area_result = list(cursor.fetchall())
+    cursor.close()
+
+
+  return render_template('search_id_result.html', agency=agency, i_agency_result=i_agency_result, \
+    f_agency_result=f_agency_result, r_agency_result=r_agency_result, person_result=person_result, \
+    area_result=area_result, person=person, area=area, region=region)
+
+
+
+
+
+
+
 
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
 def add():
   name = request.form['name']
-  g.conn.execute('INSERT INTO test(name) VALUES (%s)', name)
-  return redirect('/')
+  i_id, f_id, r_id = request.form['i_id'], request.form['f_id'], request.form['r_id']
+  des = request.form['des']
+  a_id, cp_id = request.form['a_id'], request.form['cp_id']
+  year = int(request.form['year'])
+  i_type, f_type, amount, currency = request.form['i_type'], request.form['f_type'], int(request.form['amount']), request.form['currency']
+
+  i_id_list = [int(x) for x in i_id.split(',')]
+  f_id_list = [int(x) for x in f_id.split(',')]
+  r_id_list = [int(x) for x in r_id.split(',')]
+  a_id_list = [int(x) for x in a_id.split(',')]
+  cp_id_list = [int(x) for x in cp_id.split(',')]
+
+  q_string = "SELECT max(project_id) FROM project"
+  cursor = g.conn.execute(text(q_string))
+  p_id = cursor.fetchone()[0]
+  cursor.close()
+
+  p_id = int(p_id) + 1
+  q_string = "INSERT INTO project VALUES (%i, '%s', '%s', %i, %i, %i, %i)" \
+  % (p_id, name, des, year, len(i_id_list), len(f_id_list), len(r_id_list))
+  g.conn.execute(text(q_string))
+
+  # check for success
+  q_string = "SELECT * FROM project WHERE project_id=%i" % (p_id)
+  cursor = g.conn.execute(text(q_string))
+  try: 
+    if not cursor.fetchone()[1] == name:
+      return render_template('/add_project_error.html', data = str(p_id))
+  except:
+    return render_template('/add_project_error.html', data = str(p_id))
+
+  for iid in i_id_list:
+    q_string = "INSERT INTO implement VALUES (%i, %i)" % (p_id, iid)
+    g.conn.execute(text(q_string))
+    q_string = "SELECT * FROM implement WHERE project_id=%i AND i_agency_id=%i" % (p_id, iid)
+    cursor = g.conn.execute(text(q_string))
+    try: 
+      if not int(cursor.fetchone()[1]) == iid:
+        return render_template('/add_project_error.html', data = str(p_id))
+    except:
+      return render_template('/add_project_error.html', data = str(p_id))
+
+  for fid in f_id_list:
+    q_string = "INSERT INTO fund VALUES (%i, %i)" % (p_id, fid)
+    g.conn.execute(text(q_string))
+    q_string = "SELECT * FROM fund WHERE project_id=%i AND f_agency_id=%i" % (p_id, fid)
+    cursor = g.conn.execute(text(q_string))
+    try: 
+      if not int(cursor.fetchone()[1]) == fid:
+        return render_template('/add_project_error.html', data = str(p_id))
+    except:
+      return render_template('/add_project_error.html', data = str(p_id))
+
+  for aid in a_id_list:
+    q_string = "INSERT INTO receive_area VALUES (%i, %i)" % (p_id, aid)
+    g.conn.execute(text(q_string))
+    q_string = "SELECT * FROM receive_area WHERE project_id=%i AND area_id=%i" % (p_id, aid)
+    cursor = g.conn.execute(text(q_string))
+    try: 
+      if not int(cursor.fetchone()[1]) == aid:
+        return render_template('/add_project_error.html', data = str(p_id))
+    except:
+      return render_template('/add_project_error.html', data = str(p_id))
+
+  for cpid in cp_id_list:
+    q_string = "INSERT INTO contact VALUES (%i, %i)" % (p_id, cpid)
+    g.conn.execute(text(q_string))
+    q_string = "SELECT * FROM contact WHERE project_id=%i AND person_id=%i" % (p_id, cpid)
+    cursor = g.conn.execute(text(q_string))
+    try: 
+      if not int(cursor.fetchone()[1]) == cpid:
+        return render_template('/add_project_error.html', data = str(p_id))
+    except:
+      return render_template('/add_project_error.html', data = str(p_id))
+
+
+  for rid in r_id_list:
+    q_string = "INSERT INTO recieve_agency VALUES (%i, %i, '%s', '%s', %i, '%s')"\
+    % (p_id, rid, i_type, f_type, amount, currency)
+    g.conn.execute(text(q_string))
+    q_string = "SELECT * FROM recieve_agency WHERE project_id=%i AND r_agency_id=%i" % (p_id, rid)
+    cursor = g.conn.execute(text(q_string))
+    try: 
+      if not int(cursor.fetchone()[1]) == rid:
+        return render_template('/add_project_error.html', data = str(p_id))
+    except:
+      return render_template('/add_project_error.html', data = str(p_id))
+
+
+
+
+
+  return render_template('/add_project_success.html', data = str(p_id))
+
 
 
 @app.route('/login')

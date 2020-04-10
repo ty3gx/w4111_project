@@ -1,0 +1,131 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+<body>
+  <h2>Search Result:</h1>
+
+{% if i_agency_result == [] and f_agency_result == [] and r_agency_result == [] and person_result == [] and area_result == [] %}
+<font color="red"> No Result For Your Search<br><br><br><br><br>
+{% endif %}
+
+{% if agency != "" %}
+{% if i_agency_result != [] %}
+<h3>Implementing Agencies with the name "{{agency}}":</h3>
+<table border="1">
+<tr>
+   <th>Agency ID</th>
+   <th>Agency Name</th>
+   <th>Agency Type</th>
+</tr>
+{% for item in i_agency_result %}
+
+<tr>
+   <td>{{item[0]}}</td>
+   <td>{{item[1]}}</td>
+   <td>{{item[2]}}</td>
+</tr>
+{% endfor %}
+</table><br><br>
+{% endif %}
+
+{% if f_agency_result != [] %}
+<h3>Funding Agencies with the name "{{agency}}":</h3>
+<table border="1">
+<tr>
+   <th>Agency ID</th>
+   <th>Agency Name</th>
+   <th>Agency Type</th>
+</tr>
+{% for item in f_agency_result %}
+
+<tr>
+   <td>{{item[0]}}</td>
+   <td>{{item[1]}}</td>
+   <td>{{item[2]}}</td>
+</tr>
+{% endfor %}
+</table><br><br>
+{% endif %}
+
+{% if r_agency_result != [] %}
+<h3>Recipient Agencies with the name "{{agency}}":</h3>
+<table border="1">
+<tr>
+   <th>Agency ID</th>
+   <th>Agency Name</th>
+   <th>Agency Type</th>
+</tr>
+{% for item in r_agency_result %}
+
+<tr>
+   <td>{{item[0]}}</td>
+   <td>{{item[1]}}</td>
+   <td>{{item[2]}}</td>
+</tr>
+{% endfor %}
+</table><br><br>
+{% endif %}
+{% endif %}
+
+
+
+{% if person != "" and person_result != [] %}
+<h3>Contact Persons with the name "{{person}}":</h3>
+<table border="1">
+<tr>
+   <th>Person ID</th>
+   <th>Person Name</th>
+</tr>
+{% for item in person_result %}
+
+<tr>
+   <td>{{item[0]}}</td>
+   <td>{{item[1]}}</td>
+</tr>
+{% endfor %}
+</table><br><br>
+{% endif %}
+
+{% if area_result != [] %}
+{% if area != "" and region != "" %}
+<h3>Recipient Areas of "{{area}}" and region of "{{region}}":</h3>
+{% endif %}
+{% if area != "" and region == "" %}
+<h3>Recipient Areas of "{{area}}":</h3>
+{% endif %}
+{% if area == "" and region != "" %}
+<h3>Recipient area of region "{{region}}":</h3>
+{% endif %}
+<table border="1">
+<tr>
+   <th>Recipient Area ID</th>
+   <th>Area Name</th>
+   <th>Region Name</th>
+</tr>
+{% for item in area_result %}
+
+<tr>
+   <td>{{item[0]}}</td>
+   <td>{{item[1]}}</td>
+   <td>{{item[2]}}</td>
+</tr>
+{% endfor %}
+</table><br><br>
+{% endif %}
+
+
+<a href="/">Go to main page</a><br>
+<a href="/add_project">Add a project</a><br>
+<a href="/search_id">Go back to id search</a><br>
+
+
+</body>
+
+
+</html>

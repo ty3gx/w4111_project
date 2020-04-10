@@ -1,0 +1,56 @@
+<html>
+  <style>
+    body{ 
+      font-size: 10pt;
+      font-family: arial;
+    }
+  </style>
+
+
+<body>
+  <h1>Add a new project:</h1>
+
+ <font size="3"><a href="/search_id">Search for ids of existing agencies, contact persons, and recipient areas</a>  <br><br>
+ <font size="2">
+ <a href="/add_agency">Add a new agency</a>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ <a href="/add_person">Add a new contact person</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ <a href="/add_r_area">Add a new recipient area</a>
+
+ <br><br><br><br><br>
+
+
+<form method="POST" action="/add">
+Add a new project (fields indicate in blue is required):<br><br>
+<font color="blue">Project name: <input type="text" name="name" size="75" required> <br><br>
+<font color="blue">Implementing Agency ID (Multiple entries seperate by comma): 
+	<input type="text" name="i_id" pattern="[0-9, ]*" title="only numbers and comma allowed" required> <br><br>
+<font color="blue">Funding Agency ID (Multiple entries seperate by comma):
+	<input type="text" name="f_id" pattern="[0-9, ]*" title="only numbers and comma allowed" required> <br><br>
+<font color="blue">Recipient Agency ID  (Multiple entries seperate by comma):
+	<input type="text" name="r_id" pattern="[0-9, ]*" title="only numbers and comma allowed" required> <br><br>
+<font color="blue">Project description: <textarea rows="4" cols="50" name="des" required> </textarea><br><br>
+<font color="blue">Recipient Area ID (Multiple entries seperate by comma):
+	<input type="text" name="a_id" pattern="[0-9, ]*" title="only numbers and comma allowed" required> <br><br>
+	<font color="blue">Year:
+	<input type="number" name="year" required> <br><br>
+<font color="grey">Contact Person ID (Multiple entries seperate by comma):
+	<input type="text" name="cp_id" pattern="[0-9, ]*" title="only numbers and comma allowed"> <br><br>
+
+<font color="grey">Intent type:
+	<input type="text" name="i_type"> <br><br>
+<font color="grey">Flow type:
+	<input type="text" name="f_type"> <br><br>
+<font color="grey">Amount:
+	<input type="number" name="amount"> <br><br>
+<font color="grey">Currency:
+	<input type="text" name="currency"> <br><br>
+
+
+
+<input type="submit" value="Add"> 
+</form>
+
+</body>
+
+
+</html>

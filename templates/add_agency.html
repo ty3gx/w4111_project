@@ -1,0 +1,49 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+<body>
+  <h1>Add a new Agency:</h1>
+
+
+<form method="POST" action="/add_agency_action">
+  Agency Type:
+  <select name="type" required>
+  <option value="">None</option>
+  <option value="f">Funding Agency</option>
+  <option value="i">Implementing Agency</option>
+  <option value="r">Recipient Agency</option>
+  </select>
+  <br> 
+  <br> 
+
+  Agency Name: <input type="text" name="name" required>
+  <br> 
+  <br> 
+
+  Specific Type:
+  <select name="s_type" required>
+  <option value="">None</option>
+  <option value="Government Agency">Government Agency</option>
+  <option value="State-Owned Company">State-Owned Company</option>
+  <option value="Political Party">Political Party</option>
+  <option value="Private Sector">Private Sector</option>
+  <option value="Other">Other</option>
+  </select>
+  <br> 
+  <br> 
+  If other: <input type="text" name="other_type">
+  <br>
+  <br>  
+  <input type="submit">
+</form>
+
+</body>
+
+
+</html>
