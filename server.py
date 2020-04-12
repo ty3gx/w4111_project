@@ -344,37 +344,20 @@ def mainsearch_action():
   WHERE 
   title != '' """
   
-  q2a_string = q_string
-  q2b_string = " % ("
-  
   if project_id != "":
-    q2a_string = q2a_string + " and project_id = %i"
-    q2b_string = q2b_string + "project_id"
+    q_string = q_string + " and p.project_id = " + project_id
     
   if project_name != "":
-    q2a_string = q2a_string + " and UPPER(title) LIKE UPPER('%%%s%%')"
-    if q2b_string[-1:] == "(":
-    	q2b_string = q2b_string + "project_name"
-    else:
-    	q2b_string = q2b_string + ", project_name"
+    q_string = q_string + " and UPPER(title) LIKE UPPER('%%%s%%')" %(project_name)
     
   if aidtype != "":
-    q2a_string = q2a_string + " and UPPER(flow_type) LIKE UPPER('%%%s%%')"
-    if q2b_string[-1:] == "(":
-    	q2b_string = q2b_string + "aidtype"
-    else:
-    	q2b_string = q2b_string + ", aidtype"
+    q_string = q_string + " and UPPER(flow_type) LIKE UPPER('%%%s%%')" %(aidtype)
     
   if intenttype != "":
-    q2a_string = q2a_string + " and UPPER(intent_type) LIKE UPPER('%%%s%%')"
-    if q2b_string[-1:] == "(":
-    	q2b_string = q2b_string + "intenttype"
-    else:
-    	q2b_string = q2b_string + ", intenttype"
-
-  qfinal_string = "'" + q2a_string + "'" + q2b_string + ");"
+    q_string = q_string + " and UPPER(intent_type) LIKE UPPER('%%%s%%')" %(intenttype)
+  print(q_string, file=sys.stderr)
   
-  cursor = g.conn.execute(text(qfinal_string))
+  cursor = g.conn.execute(text(q_string))
   mainsearch_result = list(cursor.fetchall())
   cursor.close()
     
