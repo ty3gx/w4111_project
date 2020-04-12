@@ -1,0 +1,83 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+<body>
+  <h2>Search entire database by project, year, aid type, intent type, or recipient:</h1><br><br>
+  
+
+<form method="POST" action="/mainsearch_action">
+  Search by project ID: <input type="text" name="project_id">
+  <br> 
+  Search by project name: <input type="text" name="project_name">
+  <br> 
+<!-- 
+  Search by year: <input type="text" name="year">
+  <br>
+ -->
+  Search by aid type:
+  <select name="aidtype">
+  <option value="Free-standing technical assistance">Free-standing technical assistance</option>
+  <option value="Loan (excluding debt rescheduling)">Loan (excluding debt rescheduling)</option>
+  <option value="Grant">Grant</option>
+  <option value="Debt forgiveness">Debt forgiveness</option>
+  <option value="Vague TBD">Vague TBD</option>
+  <option value="Scholarships/training in the donor country">Scholarships/training in the donor country</option>
+  <option value="Strategic/Supplier Credit">Strategic/Supplier Credit</option>
+  <option value="Export credits">Export credits</option>
+  <option value="Debt rescheduling">Debt rescheduling</option>
+  </select>
+  <br>
+  
+  Search by intent type:
+  <select name="intenttype">
+  <option value="Development">Development</option>
+  <option value="Commercial">Commercial</option>
+  <option value="Mixed">Mixed</option>
+  <option value="Representational">Representational</option>
+  </select>
+  <br>
+
+<!-- 
+  Search for contact person:<br>
+  Contact Person Name: <input type="text" name="person">
+  <br> 
+  <br> 
+
+  Search for recipient areas:<br>
+  Area Name: <input type="text" name="area"><br>
+  Region:
+  <select name="region">
+  <option value="Africa">Africa</option>
+  <option value="Asia">Asia</option>
+  <option value="Latin America and the Caribbean">Latin America and the Caribbean</option>
+  <option value="Central and Eastern Europe">Central and Eastern Europe</option>
+  <option value="The Pacific">The Pacific</option>
+  <option value="Middle East">Middle East</option>
+  <option value="Other">Other</option>
+  </select>
+  <br> 
+  <br> 
+
+  Search for projects by year:<br>
+  Year: <input type="number" name="year">
+  <br>
+  <br>
+ -->
+  
+  <input type="submit">
+</form>
+
+
+<a href="/">Go to main page</a><br>
+<a href="/add_project">Add a project</a><br>
+
+
+</body>
+
+</html>

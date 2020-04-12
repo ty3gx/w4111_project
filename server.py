@@ -278,7 +278,113 @@ def add_r_area_action():
 
 
 
+#---------------------------------------------------------
+# Define main search
+@app.route('/mainsearch')
+def mainsearch():
+  return render_template('mainsearch.html')
 
+@app.route('/mainsearch_action', methods = ['POST'])
+def mainsearch_action():
+  project_id = request.form['project_id']
+  project_name = request.form['project_name']
+#   year = request.form['year']
+  aidtype = request.form['aidtype']
+  intenttype = request.form['intenttype']
+  
+  mainsearch_result = []
+  
+#   if project_id != "":
+#     pid_string1 = "project_id = %i"
+#     pid_string2 = ", project_id"
+#     
+#   if project_name != "":
+#     pname_string1 = "UPPER(title) LIKE UPPER('%%%s%%')"
+#     pname_string2 = ", project_name"
+#     
+#   if aidtype != "":
+#     aid_string1 = "UPPER(flow_type) LIKE UPPER('%%%s%%')"
+#     aid_string2 = ", aidtype"
+#     
+#   if intenttype != "":
+#     intent_string1 = "UPPER(intent_type) LIKE UPPER('%%%s%%')"
+#     intent_string2 = ", intenttype"
+    
+  q_string = """SELECT * FROM project as p 
+  left join
+  implement as i1 
+  on p.project_id = i1.project_id
+  left join
+  implementing_agency as i2 
+  on i1.i_agency_id = i2.i_agency_id 
+  left join 
+  fund as f1 
+  on p.project_id = f1.project_id
+  left join 
+  funding_agency as f2
+  on f1.f_agency_id = f2.f_agency_id
+  left join
+  receive_area as ra1
+  on p.project_id = ra1.project_id
+  left join
+  recipient_area as ra2
+  on ra1.area_id = ra2.area_id
+  left join
+  receive_agency as rg1
+  on p.project_id = rg1.project_id
+  left join
+  recipient_agency as rg2
+  on rg1.r_agency_id = rg2.r_agency_id
+  left join
+  contact as c1
+  on p.project_id = c1.project_id
+  left join
+  contact_person as c2
+  on c1.person_id = c2.person_id 
+  WHERE 
+  title != '' """
+  
+  q2a_string = q_string
+  q2b_string = " % ("
+  
+  if project_id != "":
+    q2a_string = q2a_string + " and project_id = %i"
+    q2b_string = q2b_string + "project_id"
+    
+  if project_name != "":
+    q2a_string = q2a_string + " and UPPER(title) LIKE UPPER('%%%s%%')"
+    if q2b_string[-1:] == "(":
+    	q2b_string = q2b_string + "project_name"
+    else:
+    	q2b_string = q2b_string + ", project_name"
+    
+  if aidtype != "":
+    q2a_string = q2a_string + " and UPPER(flow_type) LIKE UPPER('%%%s%%')"
+    if q2b_string[-1:] == "(":
+    	q2b_string = q2b_string + "aidtype"
+    else:
+    	q2b_string = q2b_string + ", aidtype"
+    
+  if intenttype != "":
+    q2a_string = q2a_string + " and UPPER(intent_type) LIKE UPPER('%%%s%%')"
+    if q2b_string[-1:] == "(":
+    	q2b_string = q2b_string + "intenttype"
+    else:
+    	q2b_string = q2b_string + ", intenttype"
+
+  qfinal_string = "'" + q2a_string + "'" + q2b_string + ");"
+  
+  cursor = g.conn.execute(text(qfinal_string))
+  mainsearch_result = list(cursor.fetchall())
+  cursor.close()
+    
+  return render_template('mainsearch_result.html', project_id=project_id, \
+    project_name = project_name, \
+    mainsearch_result=mainsearch_result, \
+#     year=year, 
+    aidtype = aidtype, intenttype = intenttype)
+
+#---------------------------------------------------------
 
 @app.route('/search_id')
 def search_id():
@@ -290,12 +396,18 @@ def search_id_action():
   person = request.form['person']
   area = request.form['area']
   region = request.form['region']
-
+  year = request.form['year']
+  aidtype = request.form['aidtype']
+  intenttype = request.form['intenttype']
+  
   i_agency_result = []
   f_agency_result = []
   r_agency_result = []
   person_result = []
   area_result = []
+  year_result = []
+  aidtype_result = []
+  intenttype_result = []
 
   if agency != "":
     q_string = "SELECT * FROM implementing_agency WHERE UPPER(i_agency_name) LIKE UPPER('%%%s%%')" %(agency)
@@ -339,10 +451,29 @@ def search_id_action():
     area_result = list(cursor.fetchall())
     cursor.close()
 
-
+  if year != "":
+    q_string = "SELECT * FROM project WHERE year=%i" % (year)
+    cursor.g.conn.execute(text(q_string))
+    year_result = list(cursor.fetchall())
+    cursor.close
+	
+  if aidtype != "":
+    q_string = "SELECT * FROM receive_agency WHERE UPPER(flow_type) LIKE UPPER('%%%s%%')" % (aidtype)
+    cursor = g.conn.execute(text(q_string))
+    aidtype_result = list(cursor.fetchall())
+    cursor.close()
+    
+  if intenttype != "":
+    q_string = "SELECT * FROM receive_agency WHERE UPPER(intent_type) LIKE UPPER('%%%s%%')" % (intenttype)
+    cursor = g.conn.execute(text(q_string))
+    intenttype_result = list(cursor.fetchall())
+    cursor.close()
+    
   return render_template('search_id_result.html', agency=agency, i_agency_result=i_agency_result, \
     f_agency_result=f_agency_result, r_agency_result=r_agency_result, person_result=person_result, \
-    area_result=area_result, person=person, area=area, region=region)
+    area_result=area_result, year_result = year_result, aidtype_result = aidtype_result, \
+    intenttype_result = intenttype_result, person=person, area=area, region=region, \
+    year=year, aidtype = aidtype, intenttype = intenttype)
 
 
 

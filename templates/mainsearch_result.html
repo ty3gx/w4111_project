@@ -1,0 +1,111 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+<body>
+<h2>Search results:</h1>
+
+<!-- Reply if no search results -->
+{% if mainsearch_result == [] %}
+<font color="red"> Sorry, there are no projects meeting your criteria.<br><br><br><br><br>
+{% endif %}
+
+<!-- Subtitles -->
+{% if project_id != "" %}
+<h3>Projects with the ID: "{{project_id}}"</h3>
+{% endif %}
+
+{% if project_name != "" %}
+<h3>Projects with the name: "{{project_name}}"</h3>
+{% endif %}
+
+{% if aidtype != "" %}
+<h3>Projects with aid type: "{{aidtype}}"</h3>
+{% endif %}
+
+{% if intenttype != "" %}
+<h3>Projects with intent type: "{{intenttype}}"</h3>
+{% endif %}
+
+<!-- Printing table -->
+
+{% if mainsearch_result != [] %}
+<table border="1">
+<tr>
+   <th>Project ID</th>
+   <th>Project Title</th>
+   <th>Project Description</th>
+   <th>Project Year</th>
+   
+   <th>Implementing Agency ID</th>
+   <th>Implementing Agency</th>
+   <th>Implementing Agency Type</th>
+   
+   <th>Funding Agency ID</th>
+   <th>Funding Agency</th>
+   <th>Funding Agency Type</th>
+   
+   <th>Funding Agency ID</th>
+   <th>Funding Agency</th>
+   <th>Funding Agency Type</th>
+   
+   <th>Area ID</th>
+   <th>Area Name</th>
+   <th>Region</th>
+   
+   <th>Recipient Agency ID</th>
+   <th>Recipient Agency</th>
+   <th>Recipient Agency Type</th>
+   
+   <th>Contact ID</th>
+   <th>Contact Name</th>
+</tr>
+{% for item in mainsearch_result %}
+
+<tr>
+   <td>{{item[0]}}</td>
+   <td>{{item[1]}}</td>
+   <td>{{item[2]}}</td>
+   <td>{{item[3]}}</td>
+   
+   <td>{{item[4]}}</td>
+   <td>{{item[5]}}</td>
+   <td>{{item[6]}}</td>
+   
+   <td>{{item[7]}}</td>
+   <td>{{item[8]}}</td>
+   <td>{{item[9]}}</td>
+   
+   <td>{{item[10]}}</td>
+   <td>{{item[11]}}</td>
+   <td>{{item[12]}}</td>
+   
+   <td>{{item[13]}}</td>
+   <td>{{item[14]}}</td>
+   <td>{{item[15]}}</td>
+   
+   <td>{{item[16]}}</td>
+   <td>{{item[17]}}</td>
+   <td>{{item[18]}}</td>
+   
+   <td>{{item[19]}}</td>
+   <td>{{item[20]}}</td>
+</tr>
+{% endfor %}
+</table><br><br>
+{% endif %}
+
+<a href="/">Go to main page</a><br>
+<a href="/add_project">Add a project</a><br>
+<a href="/mainsearch">Go back to project search</a><br>
+
+
+</body>
+
+
+</html>
