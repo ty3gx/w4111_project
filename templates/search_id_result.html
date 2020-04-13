@@ -8,15 +8,15 @@
 
 
 <body>
-  <h2>Search Result:</h1>
+  <h2>Search results:</h1>
 
 {% if i_agency_result == [] and f_agency_result == [] and r_agency_result == [] and person_result == [] and area_result == [] %}
-<font color="red"> No Result For Your Search<br><br><br><br><br>
+<font color="red"> Sorry, there were no results for your search<br><br><br><br><br>
 {% endif %}
 
 {% if agency != "" %}
 {% if i_agency_result != [] %}
-<h3>Implementing Agencies with the name "{{agency}}":</h3>
+<h3>Implementing agencies with the name "{{agency}}":</h3>
 <table border="1">
 <tr>
    <th>Agency ID</th>
@@ -33,11 +33,11 @@
 {% endfor %}
 </table><br><br>
 {% else %}
-No Result For Your Search of "{{agency}}" in implementing agencies.<br><br>
+Sorry, there were no results for your search of "{{agency}}" in implementing agencies.<br><br>
 {% endif %}
 
 {% if f_agency_result != [] %}
-<h3>Funding Agencies with the name "{{agency}}":</h3>
+<h3>Funding agencies with the name "{{agency}}":</h3>
 <table border="1">
 <tr>
    <th>Agency ID</th>
@@ -54,11 +54,11 @@ No Result For Your Search of "{{agency}}" in implementing agencies.<br><br>
 {% endfor %}
 </table><br><br>
 {% else %}
-No Result For Your Search of "{{agency}}" in funding agencies.<br><br>
+Sorry, there were no results for your search of "{{agency}}" in funding agencies.<br><br>
 {% endif %}
 
 {% if r_agency_result != [] %}
-<h3>Recipient Agencies with the name "{{agency}}":</h3>
+<h3>Recipient agencies with the name "{{agency}}":</h3>
 <table border="1">
 <tr>
    <th>Agency ID</th>
@@ -75,7 +75,7 @@ No Result For Your Search of "{{agency}}" in funding agencies.<br><br>
 {% endfor %}
 </table><br><br>
 {% else %}
-No Result For Your Search of "{{agency}}" in recipient agencies.<br><br>
+Sorry, there were no results for your search of "{{agency}}" in recipient agencies.<br><br>
 {% endif %}
 {% endif %}
 
@@ -83,7 +83,7 @@ No Result For Your Search of "{{agency}}" in recipient agencies.<br><br>
 
 {% if person != "" %}
 {% if person_result != [] %}
-<h3>Contact Persons with the name "{{person}}":</h3>
+<h3>Contact persons with the name "{{person}}":</h3>
 <table border="1">
 <tr>
    <th>Person ID</th>
@@ -98,16 +98,16 @@ No Result For Your Search of "{{agency}}" in recipient agencies.<br><br>
 {% endfor %}
 </table><br><br>
 {% else %}
-No Result For Your Search of "{{person}}" in contact persons.<br><br>
+Sorry, there were no results for your search of "{{person}}" in contact persons.<br><br>
 {% endif %}
 {% endif %}
 
 {% if area_result != [] %}
 {% if area != "" and region != "" %}
-<h3>Recipient Areas of "{{area}}" and region of "{{region}}":</h3>
+<h3>Recipient areas of "{{area}}" and region of "{{region}}":</h3>
 {% endif %}
 {% if area != "" and region == "" %}
-<h3>Recipient Areas of "{{area}}":</h3>
+<h3>Recipient areas of "{{area}}":</h3>
 {% endif %}
 {% if area == "" and region != "" %}
 <h3>Recipient area of region "{{region}}":</h3>
@@ -128,7 +128,7 @@ No Result For Your Search of "{{person}}" in contact persons.<br><br>
 {% endfor %}
 </table><br><br>
 {% else %}
-No Result For Your Search in recipient areas.<br><br>
+Sorry, there were no results for your search in recipient areas.<br><br>
 {% endif %}
 
 <font color="black">
