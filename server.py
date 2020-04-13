@@ -199,7 +199,7 @@ def add_agency_action():
   q_string = "SELECT * FROM %s_agency WHERE %s_agency_id=%i" % (a_type_full, a_type, a_id)
   cursor = g.conn.execute(text(q_string))
   try: 
-    if not cursor.fetchone()[1] == name:
+    if not cursor.fetchone()[1] == name.replace('\'\'', '\''):
       return render_template('/add_agency_error.html', data = str(a_id))
   except:
     return render_template('/add_agency_error.html', data = str(a_id))
@@ -231,7 +231,7 @@ def add_person_action():
   q_string = "SELECT * FROM contact_person WHERE person_id=%i" % (a_id)
   cursor = g.conn.execute(text(q_string))
   try: 
-    if not cursor.fetchone()[1] == name:
+    if not cursor.fetchone()[1] == name.replace('\'\'', '\''):
       return render_template('/add_person_error.html', data = str(a_id))
   except:
     return render_template('/add_person_error.html', data = str(a_id))
@@ -270,7 +270,7 @@ def add_r_area_action():
   q_string = "SELECT * FROM recipient_area WHERE area_id=%i" % (a_id)
   cursor = g.conn.execute(text(q_string))
   try: 
-    if not cursor.fetchone()[1] == name:
+    if not cursor.fetchone()[1] == name.replace('\'\'', '\''):
       return render_template('/add_r_area_error.html', data = str(a_id))
   except:
     return render_template('/add_r_area_error.html', data = str(a_id))
@@ -558,7 +558,7 @@ def add():
   q_string = "SELECT * FROM project WHERE project_id=%i" % (p_id)
   cursor = g.conn.execute(text(q_string))
   try: 
-    if not cursor.fetchone()[1] == name:
+    if not cursor.fetchone()[1] == name.replace('\'\'', '\''):
       return render_template('/add_project_error.html', data = str(p_id))
   except:
     return render_template('/add_project_error.html', data = str(p_id))
