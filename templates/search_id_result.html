@@ -32,6 +32,8 @@
 </tr>
 {% endfor %}
 </table><br><br>
+{% else %}
+No Result For Your Search of "{{agency}}" in implementing agencies.<br><br>
 {% endif %}
 
 {% if f_agency_result != [] %}
@@ -51,6 +53,8 @@
 </tr>
 {% endfor %}
 </table><br><br>
+{% else %}
+No Result For Your Search of "{{agency}}" in funding agencies.<br><br>
 {% endif %}
 
 {% if r_agency_result != [] %}
@@ -70,12 +74,15 @@
 </tr>
 {% endfor %}
 </table><br><br>
+{% else %}
+No Result For Your Search of "{{agency}}" in recipient agencies.<br><br>
 {% endif %}
 {% endif %}
 
 
 
-{% if person != "" and person_result != [] %}
+{% if person != "" %}
+{% if person_result != [] %}
 <h3>Contact Persons with the name "{{person}}":</h3>
 <table border="1">
 <tr>
@@ -90,6 +97,9 @@
 </tr>
 {% endfor %}
 </table><br><br>
+{% else %}
+No Result For Your Search of "{{person}}" in contact persons.<br><br>
+{% endif %}
 {% endif %}
 
 {% if area_result != [] %}
@@ -117,9 +127,11 @@
 </tr>
 {% endfor %}
 </table><br><br>
+{% else %}
+No Result For Your Search in recipient areas.<br><br>
 {% endif %}
 
-
+<font color="black">
 <a href="/">Go to main page</a><br>
 <a href="/add_project">Add a project</a><br>
 <a href="/search_id">Go back to id search</a><br>

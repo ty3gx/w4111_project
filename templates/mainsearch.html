@@ -12,7 +12,7 @@
   
 
 <form method="POST" action="/mainsearch_action">
-  Search by project ID: <input type="text" name="project_id">
+  Search by project ID: <input type="text" name="project_id" pattern="[0-9, ]*" title="only numbers allowed">
   <br> 
   
   Search by project name: <input type="text" name="project_name">
@@ -21,7 +21,7 @@
   Search by funding or implementing agency name: <input type="text" name="fi_agency">
   <br> 
   
-  Search by year (From 2000-2014): <input type="text" name="year">
+  Search by year (From 2000-2014): <input type="text" name="year" pattern="[0-9, ]*" title="only numbers allowed">
   <br>
   
   Search by recipient agency: <input type="text" name="r_agency">

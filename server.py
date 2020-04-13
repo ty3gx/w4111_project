@@ -347,7 +347,7 @@ def mainsearch_action():
     q_string = q_string + " and UPPER(title) LIKE UPPER('%%%s%%')" %(project_name)
     
   if fi_agency != "":
-    q_string = q_string + " and (UPPER(i_agency_name) LIKE UPPER('%%%s%%') or UPPER(f_agency_name) LIKE UPPER('%%%s%%'))" %(fi_agency)
+    q_string = q_string + " and (UPPER(i_agency_name) LIKE UPPER('%%%s%%') or UPPER(f_agency_name) LIKE UPPER('%%%s%%'))" %(fi_agency, fi_agency)
     
   if year != "":
     q_string = q_string + " and p.year = " + year
@@ -367,7 +367,7 @@ def mainsearch_action():
   if intenttype != "Any":
     q_string = q_string + " and UPPER(intent_type) LIKE UPPER('%%%s%%')" %(intenttype)
     
-  print(q_string, file=sys.stderr)
+  # print(q_string, file=sys.stderr)
   
   cursor = g.conn.execute(text(q_string))
   mainsearch_result = list(cursor.fetchall())
@@ -376,7 +376,7 @@ def mainsearch_action():
   return render_template('mainsearch_result.html', project_id=project_id, \
     project_name = project_name, \
     mainsearch_result=mainsearch_result, \
-    year=year, 
+    year=year, fi_agency=fi_agency, r_agency=r_agency, region=region, contact=contact, \
     aidtype = aidtype, intenttype = intenttype)
 
 
@@ -390,18 +390,12 @@ def search_id_action():
   person = request.form['person']
   area = request.form['area']
   region = request.form['region']
-  year = request.form['year']
-  aidtype = request.form['aidtype']
-  intenttype = request.form['intenttype']
   
   i_agency_result = []
   f_agency_result = []
   r_agency_result = []
   person_result = []
   area_result = []
-  year_result = []
-  aidtype_result = []
-  intenttype_result = []
 
   if agency != "":
     q_string = "SELECT * FROM implementing_agency WHERE UPPER(i_agency_name) LIKE UPPER('%%%s%%')" %(agency)
@@ -444,30 +438,10 @@ def search_id_action():
     cursor = g.conn.execute(text(q_string))
     area_result = list(cursor.fetchall())
     cursor.close()
-
-  if year != "":
-    q_string = "SELECT * FROM project WHERE year=%i" % (year)
-    cursor.g.conn.execute(text(q_string))
-    year_result = list(cursor.fetchall())
-    cursor.close
-	
-  if aidtype != "":
-    q_string = "SELECT * FROM receive_agency WHERE UPPER(flow_type) LIKE UPPER('%%%s%%')" % (aidtype)
-    cursor = g.conn.execute(text(q_string))
-    aidtype_result = list(cursor.fetchall())
-    cursor.close()
-    
-  if intenttype != "":
-    q_string = "SELECT * FROM receive_agency WHERE UPPER(intent_type) LIKE UPPER('%%%s%%')" % (intenttype)
-    cursor = g.conn.execute(text(q_string))
-    intenttype_result = list(cursor.fetchall())
-    cursor.close()
     
   return render_template('search_id_result.html', agency=agency, i_agency_result=i_agency_result, \
     f_agency_result=f_agency_result, r_agency_result=r_agency_result, person_result=person_result, \
-    area_result=area_result, year_result = year_result, aidtype_result = aidtype_result, \
-    intenttype_result = intenttype_result, person=person, area=area, region=region, \
-    year=year, aidtype = aidtype, intenttype = intenttype)
+    area_result=area_result, person=person, area=area, region=region)
 
 
 
@@ -487,11 +461,22 @@ def add():
   year = int(request.form['year'])
   i_type, f_type, amount, currency = request.form['i_type'], request.form['f_type'], int(request.form['amount']), request.form['currency']
 
-  i_id_list = [int(x) for x in i_id.split(',')]
-  f_id_list = [int(x) for x in f_id.split(',')]
-  r_id_list = [int(x) for x in r_id.split(',')]
-  a_id_list = [int(x) for x in a_id.split(',')]
-  cp_id_list = [int(x) for x in cp_id.split(',')]
+  i_id_list = []
+  f_id_list = []
+  r_id_list = []
+  a_id_list = []
+  cp_id_list = []
+
+  if i_id != "":
+    i_id_list = [int(x) for x in i_id.split(',')]
+  if f_id != "":
+    f_id_list = [int(x) for x in f_id.split(',')]
+  if r_id != "":
+    r_id_list = [int(x) for x in r_id.split(',')]
+  if a_id != "":
+    a_id_list = [int(x) for x in a_id.split(',')]
+  if cp_id != "": 
+    cp_id_list = [int(x) for x in cp_id.split(',')]
 
   q_string = "SELECT max(project_id) FROM project"
   cursor = g.conn.execute(text(q_string))
