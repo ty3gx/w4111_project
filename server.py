@@ -459,7 +459,12 @@ def add():
   des = request.form['des']
   a_id, cp_id = request.form['a_id'], request.form['cp_id']
   year = int(request.form['year'])
-  i_type, f_type, amount, currency = request.form['i_type'], request.form['f_type'], int(request.form['amount']), request.form['currency']
+  i_type, f_type, amount, currency = request.form['i_type'], request.form['f_type'], request.form['amount'], request.form['currency']
+
+  try:
+    amount = int(amount)
+  except:
+    amount = -1
 
   i_id_list = []
   f_id_list = []
@@ -477,6 +482,67 @@ def add():
     a_id_list = [int(x) for x in a_id.split(',')]
   if cp_id != "": 
     cp_id_list = [int(x) for x in cp_id.split(',')]
+
+
+  # check for ids in database
+  for i_id in i_id_list:
+    try:
+      q_string = "SELECT * FROM implementing_agency WHERE i_agency_id = %i" % (i_id)
+      cursor = g.conn.execute(text(q_string))
+      temp = list(cursor.fetchall())
+      cursor.close()
+      if temp == []:
+        return render_template('/add_project_error.html')
+    except:
+      return render_template('/add_project_error.html')
+
+  for f_id in f_id_list:
+    try:
+      q_string = "SELECT * FROM funding_agency WHERE f_agency_id = %i" % (f_id)
+      cursor = g.conn.execute(text(q_string))
+      temp = list(cursor.fetchall())
+      cursor.close()
+      if temp == []:
+        return render_template('/add_project_error.html')
+    except:
+      return render_template('/add_project_error.html')
+
+  for r_id in r_id_list:
+    try:
+      q_string = "SELECT * FROM recipient_agency WHERE r_agency_id = %i" % (r_id)
+      cursor = g.conn.execute(text(q_string))
+      temp = list(cursor.fetchall())
+      cursor.close()
+      if temp == []:
+        return render_template('/add_project_error.html')
+    except:
+      return render_template('/add_project_error.html')
+
+  for a_id in a_id_list:
+    try:
+      q_string = "SELECT * FROM recipient_area WHERE area_id = %i" % (a_id)
+      cursor = g.conn.execute(text(q_string))
+      temp = list(cursor.fetchall())
+      cursor.close()
+      if temp == []:
+        return render_template('/add_project_error.html')
+    except:
+      return render_template('/add_project_error.html')
+
+  for cp_id in cp_id_list:
+    try:
+      q_string = "SELECT * FROM contact_person WHERE person_id = %i" % (cp_id)
+      cursor = g.conn.execute(text(q_string))
+      temp = list(cursor.fetchall())
+      cursor.close()
+      if temp == []:
+        return render_template('/add_project_error.html')
+    except:
+      return render_template('/add_project_error.html')
+
+
+
+
 
   q_string = "SELECT max(project_id) FROM project"
   cursor = g.conn.execute(text(q_string))
@@ -543,8 +609,12 @@ def add():
 
 
   for rid in r_id_list:
-    q_string = "INSERT INTO receive_agency VALUES (%i, %i, '%s', '%s', %i, '%s')"\
-    % (p_id, rid, i_type, f_type, amount, currency)
+    if amount == -1:
+      q_string = "INSERT INTO receive_agency VALUES (%i, %i, '%s', '%s', null, '%s')"\
+      % (p_id, rid, i_type, f_type, currency)
+    else:
+      q_string = "INSERT INTO receive_agency VALUES (%i, %i, '%s', '%s', %i, '%s')"\
+      % (p_id, rid, i_type, f_type, amount, currency)
     g.conn.execute(text(q_string))
     q_string = "SELECT * FROM receive_agency WHERE project_id=%i AND r_agency_id=%i" % (p_id, rid)
     cursor = g.conn.execute(text(q_string))
