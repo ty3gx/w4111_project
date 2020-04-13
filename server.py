@@ -458,8 +458,12 @@ def add():
   i_id, f_id, r_id = request.form['i_id'], request.form['f_id'], request.form['r_id']
   des = request.form['des'].replace('\'', '\'\'')
   a_id, cp_id = request.form['a_id'], request.form['cp_id']
-  year = int(request.form['year'])
+  year = request.form['year']
   i_type, f_type, amount, currency = request.form['i_type'].replace('\'', '\'\''), request.form['f_type'].replace('\'', '\'\''), request.form['amount'], request.form['currency'].replace('\'', '\'\'')
+
+  if len(year) > 4:
+    return render_template('/add_project_error.html')
+  year = int(year)
 
   try:
     amount = int(amount)
