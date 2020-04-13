@@ -24,11 +24,31 @@
 <h3>Projects with the name: "{{project_name}}"</h3>
 {% endif %}
 
-{% if aidtype != "" %}
+{% if fi_agency != "" %}
+<h3>Projects with the funding or implementing agency: "{{fi_agency}}"</h3>
+{% endif %}
+
+{% if year != "" %}
+<h3>Projects from the year: "{{year}}"</h3>
+{% endif %}
+
+{% if r_agency != "" %}
+<h3>Projects with the funding or recipient agency: "{{r_agency}}"</h3>
+{% endif %}
+
+{% if region != "" %}
+<h3>Projects with the recipient region: "{{region}}"</h3>
+{% endif %}
+
+{% if contact != "" %}
+<h3>Projects with the contact person: "{{contact}}"</h3>
+{% endif %}
+
+{% if aidtype != "Any" %}
 <h3>Projects with aid type: "{{aidtype}}"</h3>
 {% endif %}
 
-{% if intenttype != "" %}
+{% if intenttype != "Any" %}
 <h3>Projects with intent type: "{{intenttype}}"</h3>
 {% endif %}
 
@@ -43,24 +63,23 @@
    <th>Project Year</th>
    
    <th>Implementing Agency ID</th>
-   <th>Implementing Agency</th>
+   <th>Implementing Agency Name</th>
    <th>Implementing Agency Type</th>
+   <th>Number of Implementing Agencies</th>
    
    <th>Funding Agency ID</th>
-   <th>Funding Agency</th>
+   <th>Funding Agency Name</th>
    <th>Funding Agency Type</th>
-   
-   <th>Funding Agency ID</th>
-   <th>Funding Agency</th>
-   <th>Funding Agency Type</th>
+   <th>Number of Funding Agencies</th>
    
    <th>Area ID</th>
    <th>Area Name</th>
    <th>Region</th>
-   
+      
    <th>Recipient Agency ID</th>
-   <th>Recipient Agency</th>
+   <th>Recipient Agency Name</th>
    <th>Recipient Agency Type</th>
+   <th>Number of Recipient Agencies</th>
    
    <th>Contact ID</th>
    <th>Contact Name</th>
@@ -76,19 +95,18 @@
    <td>{{item[4]}}</td>
    <td>{{item[5]}}</td>
    <td>{{item[6]}}</td>
-   
    <td>{{item[7]}}</td>
+   
    <td>{{item[8]}}</td>
    <td>{{item[9]}}</td>
-   
    <td>{{item[10]}}</td>
    <td>{{item[11]}}</td>
-   <td>{{item[12]}}</td>
    
+   <td>{{item[12]}}</td>
    <td>{{item[13]}}</td>
    <td>{{item[14]}}</td>
-   <td>{{item[15]}}</td>
    
+   <td>{{item[15]}}</td>
    <td>{{item[16]}}</td>
    <td>{{item[17]}}</td>
    <td>{{item[18]}}</td>
@@ -100,9 +118,15 @@
 </table><br><br>
 {% endif %}
 
-<a href="/">Go to main page</a><br>
-<a href="/add_project">Add a project</a><br>
-<a href="/mainsearch">Go back to project search</a><br>
+<br>
+
+<a href="/mainsearch">Go back to main search page</a><br>
+<a href="/">Go to home page</a><br>
+<a href="/add_agency">Add a new agency</a><br>
+<a href="/add_project">Add a new project</a><br>
+<a href="/add_r_area">Add a new recipient area</a><br>
+<a href="/add_person">Add a new contact person</a><br>
+<a href="/search_id">Look up IDs for addition</a><br>
 
 
 </body>

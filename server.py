@@ -102,53 +102,54 @@ def index():
   See its API: http://flask.pocoo.org/docs/0.10/api/#incoming-request-data
   """
 
-  # DEBUG: this is debugging code to see what request looks like
-  print(request.args)
-
-
-  #
-  # example of a database query
-  #
-  cursor = g.conn.execute("SELECT * FROM contact_person")
-  names = []
-  for result in cursor:
-    names.append(result['person_name'])  # can also be accessed using result[0]
-  cursor.close()
-
-  #
-  # Flask uses Jinja templates, which is an extension to HTML where you can
-  # pass data to a template and dynamically generate HTML based on the data
-  # (you can think of it as simple PHP)
-  # documentation: https://realpython.com/blog/python/primer-on-jinja-templating/
-  #
-  # You can see an example template in templates/index.html
-  #
-  # context are the variables that are passed to the template.
-  # for example, "data" key in the context variable defined below will be 
-  # accessible as a variable in index.html:
-  #
-  #     # will print: [u'grace hopper', u'alan turing', u'ada lovelace']
-  #     <div>{{data}}</div>
-  #     
-  #     # creates a <div> tag for each element in data
-  #     # will print: 
-  #     #
-  #     #   <div>grace hopper</div>
-  #     #   <div>alan turing</div>
-  #     #   <div>ada lovelace</div>
-  #     #
-  #     {% for n in data %}
-  #     <div>{{n}}</div>
-  #     {% endfor %}
-  #
-  context = dict(data = names)
-
-
-  #
-  # render_template looks in the templates/ folder for files.
-  # for example, the below file reads template/index.html
-  #
-  return render_template("index.html", **context)
+#  # DEBUG: this is debugging code to see what request looks like
+#  print(request.args)
+#
+#
+#  #
+#  # example of a database query
+#  #
+#  cursor = g.conn.execute("SELECT * FROM contact_person")
+#  names = []
+#  for result in cursor:
+#    names.append(result['person_name'])  # can also be accessed using result[0]
+#  cursor.close()
+#
+#  #
+#  # Flask uses Jinja templates, which is an extension to HTML where you can
+#  # pass data to a template and dynamically generate HTML based on the data
+#  # (you can think of it as simple PHP)
+#  # documentation: https://realpython.com/blog/python/primer-on-jinja-templating/
+#  #
+#  # You can see an example template in templates/index.html
+#  #
+#  # context are the variables that are passed to the template.
+#  # for example, "data" key in the context variable defined below will be 
+#  # accessible as a variable in index.html:
+#  #
+#  #     # will print: [u'grace hopper', u'alan turing', u'ada lovelace']
+#  #     <div>{{data}}</div>
+#  #     
+#  #     # creates a <div> tag for each element in data
+#  #     # will print: 
+#  #     #
+#  #     #   <div>grace hopper</div>
+#  #     #   <div>alan turing</div>
+#  #     #   <div>ada lovelace</div>
+#  #     #
+#  #     {% for n in data %}
+#  #     <div>{{n}}</div>
+#  #     {% endfor %}
+#  #
+#  context = dict(data = names)
+#
+#
+#  #
+#  # render_template looks in the templates/ folder for files.
+#  # for example, the below file reads template/index.html
+#  #
+#  return render_template("index.html", **context)
+  return render_template('index.html')
 
 #
 # This is an example of a different path.  You can see it at:
@@ -278,7 +279,6 @@ def add_r_area_action():
 
 
 
-#---------------------------------------------------------
 # Define main search
 @app.route('/mainsearch')
 def mainsearch():
@@ -288,29 +288,25 @@ def mainsearch():
 def mainsearch_action():
   project_id = request.form['project_id']
   project_name = request.form['project_name']
-#   year = request.form['year']
+  fi_agency = request.form['fi_agency']
+  r_agency = request.form['r_agency']
+  contact = request.form['contact']
+  region = request.form['region']
+  year = request.form['year']
   aidtype = request.form['aidtype']
   intenttype = request.form['intenttype']
   
   mainsearch_result = []
   
-#   if project_id != "":
-#     pid_string1 = "project_id = %i"
-#     pid_string2 = ", project_id"
-#     
-#   if project_name != "":
-#     pname_string1 = "UPPER(title) LIKE UPPER('%%%s%%')"
-#     pname_string2 = ", project_name"
-#     
-#   if aidtype != "":
-#     aid_string1 = "UPPER(flow_type) LIKE UPPER('%%%s%%')"
-#     aid_string2 = ", aidtype"
-#     
-#   if intenttype != "":
-#     intent_string1 = "UPPER(intent_type) LIKE UPPER('%%%s%%')"
-#     intent_string2 = ", intenttype"
     
-  q_string = """SELECT * FROM project as p 
+  q_string = """SELECT 
+  p.project_id, p.title, p.description, p.year,
+  i2.i_agency_id, i2.i_agency_name, i2.i_agency_type, p.num_of_i_agency,
+  f2.f_agency_id, f2.f_agency_name, f2.f_agency_type, p.num_of_f_agency,
+  ra2.area_id, ra2.area_name, ra2.region,
+  rg2.r_agency_id, rg2.r_agency_name, rg2.r_agency_type, p.num_of_r_agency,
+  c2.person_id, c2.person_name
+  FROM project as p 
   left join
   implement as i1 
   on p.project_id = i1.project_id
@@ -350,11 +346,27 @@ def mainsearch_action():
   if project_name != "":
     q_string = q_string + " and UPPER(title) LIKE UPPER('%%%s%%')" %(project_name)
     
-  if aidtype != "":
+  if fi_agency != "":
+    q_string = q_string + " and (UPPER(i_agency_name) LIKE UPPER('%%%s%%') or UPPER(f_agency_name) LIKE UPPER('%%%s%%'))" %(fi_agency)
+    
+  if year != "":
+    q_string = q_string + " and p.year = " + year
+    
+  if r_agency != "":
+    q_string = q_string + " and UPPER(r_agency_name) LIKE UPPER('%%%s%%')" %(r_agency)
+    
+  if region != "Any":
+    q_string = q_string + " and UPPER(region) LIKE UPPER('%%%s%%')" %(region)
+    
+  if contact != "":
+    q_string = q_string + " and UPPER(person_name) LIKE UPPER('%%%s%%')" %(contact)
+    
+  if aidtype != "Any":
     q_string = q_string + " and UPPER(flow_type) LIKE UPPER('%%%s%%')" %(aidtype)
     
-  if intenttype != "":
+  if intenttype != "Any":
     q_string = q_string + " and UPPER(intent_type) LIKE UPPER('%%%s%%')" %(intenttype)
+    
   print(q_string, file=sys.stderr)
   
   cursor = g.conn.execute(text(q_string))
@@ -364,10 +376,9 @@ def mainsearch_action():
   return render_template('mainsearch_result.html', project_id=project_id, \
     project_name = project_name, \
     mainsearch_result=mainsearch_result, \
-#     year=year, 
+    year=year, 
     aidtype = aidtype, intenttype = intenttype)
 
-#---------------------------------------------------------
 
 @app.route('/search_id')
 def search_id():

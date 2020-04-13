@@ -14,14 +14,38 @@
 <form method="POST" action="/mainsearch_action">
   Search by project ID: <input type="text" name="project_id">
   <br> 
+  
   Search by project name: <input type="text" name="project_name">
   <br> 
-<!-- 
-  Search by year: <input type="text" name="year">
+  
+  Search by funding or implementing agency name: <input type="text" name="fi_agency">
+  <br> 
+  
+  Search by year (From 2000-2014): <input type="text" name="year">
   <br>
- -->
+  
+  Search by recipient agency: <input type="text" name="r_agency">
+  <br>
+  
+  Search by recipient region:
+  <select name="region">
+  <option value="Any">Any</option>
+  <option value="Africa">Africa</option>
+  <option value="Asia">Asia</option>
+  <option value="Latin America and the Caribbean">Latin America and the Caribbean</option>
+  <option value="Central and Eastern Europe">Central and Eastern Europe</option>
+  <option value="The Pacific">The Pacific</option>
+  <option value="Middle East">Middle East</option>
+  <option value="Other">Other</option>
+  </select>
+  <br> 
+  
+  Search by contact person: <input type="text" name="contact">
+  <br>
+
   Search by aid type:
   <select name="aidtype">
+  <option value="Any">Any</option>
   <option value="Free-standing technical assistance">Free-standing technical assistance</option>
   <option value="Loan (excluding debt rescheduling)">Loan (excluding debt rescheduling)</option>
   <option value="Grant">Grant</option>
@@ -37,6 +61,7 @@
   
   Search by intent type:
   <select name="intenttype">
+  <option value="Any">Any</option>
   <option value="Development">Development</option>
   <option value="Commercial">Commercial</option>
   <option value="Mixed">Mixed</option>
@@ -44,40 +69,19 @@
   <option value="">None</option>
   </select>
   <br>
-
-<!-- 
-  Search for contact person:<br>
-  Contact Person Name: <input type="text" name="person">
-  <br> 
-  <br> 
-
-  Search for recipient areas:<br>
-  Area Name: <input type="text" name="area"><br>
-  Region:
-  <select name="region">
-  <option value="Africa">Africa</option>
-  <option value="Asia">Asia</option>
-  <option value="Latin America and the Caribbean">Latin America and the Caribbean</option>
-  <option value="Central and Eastern Europe">Central and Eastern Europe</option>
-  <option value="The Pacific">The Pacific</option>
-  <option value="Middle East">Middle East</option>
-  <option value="Other">Other</option>
-  </select>
-  <br> 
-  <br> 
-
-  Search for projects by year:<br>
-  Year: <input type="number" name="year">
-  <br>
-  <br>
- -->
   
   <input type="submit">
 </form>
 
 
-<a href="/">Go to main page</a><br>
-<a href="/add_project">Add a project</a><br>
+<br>
+
+<a href="/">Go to home page</a><br>
+<a href="/add_agency">Add a new agency</a><br>
+<a href="/add_project">Add a new project</a><br>
+<a href="/add_r_area">Add a new recipient area</a><br>
+<a href="/add_person">Add a new contact person</a><br>
+<a href="/search_id">Look up IDs for addition</a><br>
 
 
 </body>
