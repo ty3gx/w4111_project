@@ -172,9 +172,9 @@ def add_agency():
 def add_agency_action():
   a_type_full = None
   a_type = request.form['type']
-  name = request.form['name']
+  name = request.form['name'].replace('\'', "''")
   s_type = request.form['s_type']
-  o_type = request.form['other_type']
+  o_type = request.form['other_type'].replace('\'', "''")
   #print(a_type, name, s_type, o_type, file=sys.stderr)
   if a_type == 'r':
     a_type_full = 'recipient'
@@ -215,7 +215,7 @@ def add_person():
 
 @app.route('/add_person_action', methods=['POST'])
 def add_person_action():
-  name = request.form['name']
+  name = request.form['name'].replace('\'', "''")
 
   q_string = "SELECT max(person_id) FROM contact_person"
   cursor = g.conn.execute(text(q_string))
@@ -250,9 +250,9 @@ def add_r_area():
 
 @app.route('/add_r_area_action', methods=['POST'])
 def add_r_area_action():
-  name = request.form['name']
+  name = request.form['name'].replace('\'', "''")
   region = request.form['region']
-  other = request.form['other']
+  other = request.form['other'].replace('\'', "''")
 
   if region == 'Other' and other != "":
     region = other
@@ -287,10 +287,10 @@ def mainsearch():
 @app.route('/mainsearch_action', methods = ['POST'])
 def mainsearch_action():
   project_id = request.form['project_id']
-  project_name = request.form['project_name']
-  fi_agency = request.form['fi_agency']
-  r_agency = request.form['r_agency']
-  contact = request.form['contact']
+  project_name = request.form['project_name'].replace('\'', "''")
+  fi_agency = request.form['fi_agency'].replace('\'', "''")
+  r_agency = request.form['r_agency'].replace('\'', "''")
+  contact = request.form['contact'].replace('\'', "''")
   region = request.form['region']
   year = request.form['year']
   aidtype = request.form['aidtype']
@@ -386,10 +386,10 @@ def search_id():
 
 @app.route('/search_id_action', methods=['POST'])
 def search_id_action():
-  agency = request.form['agency']
-  person = request.form['person']
-  area = request.form['area']
-  region = request.form['region']
+  agency = request.form['agency'].replace('\'', "''")
+  person = request.form['person'].replace('\'', "''")
+  area = request.form['area'].replace('\'', "''")
+  region = request.form['region'].replace('\'', "''")
   
   i_agency_result = []
   f_agency_result = []
@@ -454,12 +454,12 @@ def search_id_action():
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
 def add():
-  name = request.form['name']
+  name = request.form['name'].replace('\'', "''")
   i_id, f_id, r_id = request.form['i_id'], request.form['f_id'], request.form['r_id']
-  des = request.form['des']
+  des = request.form['des'].replace('\'', "''")
   a_id, cp_id = request.form['a_id'], request.form['cp_id']
   year = int(request.form['year'])
-  i_type, f_type, amount, currency = request.form['i_type'], request.form['f_type'], request.form['amount'], request.form['currency']
+  i_type, f_type, amount, currency = request.form['i_type'].replace('\'', "''"), request.form['f_type'].replace('\'', "''"), request.form['amount'], request.form['currency'].replace('\'', "''")
 
   try:
     amount = int(amount)
